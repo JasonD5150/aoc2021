@@ -18,7 +18,7 @@ int array_size(const int *array);
 
 int string_array_size(char *array[]);
 
-int *read_int_file(char *filename);
+int read_int_file(char *filename, int *buffer);
 
 int read_string_file(char *filename, char *lines[], int buffer_size);
 

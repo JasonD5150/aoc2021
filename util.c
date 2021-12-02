@@ -91,32 +91,27 @@ int string_array_size(char *array[]) {
     return size;
 }
 
-int *read_int_file(char *filename) {
+int read_int_file(char *filename, int *buffer) {
 
     char fn[strlen(FILE_PREFIX) + strlen(filename)];
     sprintf(fn, "%s%s", FILE_PREFIX, filename);
     FILE *fp = fopen(fn, "r");
     int input_number = 0;
-    int buffer[MAX_BUFFER];
     int i = 0;
 
     while (fscanf(fp, "%d", &input_number) == 1) {
-        if (i > MAX_BUFFER) {
+        if (i >= MAX_BUFFER) {
             fclose(fp);
+            buffer[MAX_BUFFER] = END_OF_BUFFER;
             return buffer;
         }
         buffer[i++] = input_number;
     }
-    if (i > MAX_BUFFER) {
-        fclose(fp);
-        return buffer;
-    }
-
     buffer[i] = END_OF_BUFFER;
 
     fclose(fp);
 
-    return buffer;
+    return i;
 }
 
 int l_read_lines(char *lines[], FILE *fp, int max, char terminator) {
