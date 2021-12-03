@@ -11,6 +11,14 @@ const char *FILE_PREFIX = "/Users/jasondavidson/git/aoc2021/input/";
 const int END_OF_BUFFER = -1;
 const int MAX_BUFFER = INT16_MAX;
 
+enum part daypart(char *arg) {
+    int p = (int) strtol(arg, (char **) NULL, 10);
+    if (p == 1) {
+        return ONE;
+    }
+    else return TWO;
+}
+
 void l_print_array(const int *array, int size) {
     printf("\nArray Size: %d", size);
     printf("\n[ ");
@@ -103,7 +111,7 @@ int read_int_file(char *filename, int *buffer) {
         if (i >= MAX_BUFFER) {
             fclose(fp);
             buffer[MAX_BUFFER] = END_OF_BUFFER;
-            return buffer;
+            return MAX_BUFFER;
         }
         buffer[i++] = input_number;
     }
@@ -135,7 +143,7 @@ int l_read_lines(char *lines[], FILE *fp, int max, char terminator) {
                 buffer[k] = 0;
             }
         }
-    };
+    }
     lines[j] = malloc(1);
     lines[j] = 0;
     return j;
@@ -158,7 +166,7 @@ int read_string_file(char *filename, char *lines[], int buffer_size) {
 int str_count(const char *string, const char *token) {
     char c;
     int i = 0, j = 0;
-    while ((c = string[i]) != NULL) {
+    while ((c = string[i]) != '\0') {
         if (c == *token) {
             j++;
         }
@@ -168,7 +176,7 @@ int str_count(const char *string, const char *token) {
 }
 
 int str_split(const char *string, const char *separator, char *splits[]) {
-    int str_len = strlen(string);
+    int str_len = (int)strlen(string);
     char *copy = malloc(str_len + 1);
     strlcpy(copy, string, str_len + 1);
     char *token = strtok(copy, separator);
@@ -189,17 +197,17 @@ void int2bin(int a, char *buffer, int buf_size) {
     buffer[buf_size] = '\0';
     buffer += (buf_size - 1);
     for (int i = buf_size - 1; i >= 0; i--) {
-        *buffer-- = (a & 1) + '0';
+        *buffer-- = (char)((a & 1) + '0');
         a >>= 1;
     }
 }
 
 char *substring(char *string, int start) {
-    int str_len = strlen(string);
+    int str_len = (int)strlen(string);
     char *result = malloc(str_len - start + 1);
 
-    printf("%s", *(string + start));
+    printf("%s", (string + start));
 
-    strlcpy(result, *(string + start), str_len - start);
+    strlcpy(result, (string + start), str_len - start);
     return result;
 }

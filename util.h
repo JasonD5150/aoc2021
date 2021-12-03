@@ -4,11 +4,16 @@
 
 #ifndef AOC2021_UTIL_H
 #define AOC2021_UTIL_H
+
+enum part { ONE, TWO };
+
 extern const char *FILE_PREFIX;
 
 extern const int END_OF_BUFFER;
 
 extern const int MAX_BUFFER;
+
+enum part daypart(char *arg);
 
 int int_compare(const void *a, const void *b);
 

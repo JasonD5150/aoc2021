@@ -3,7 +3,7 @@
 //
 
 #include "util.h"
-#include "day02.h"
+#include "days.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -40,7 +40,7 @@ struct navigation calc_navigation(char *buffer) {
     return n;
 }
 
-void day02p1(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
+static void p1(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
     for (int i = 0; i < buffer_len; i++) {
         struct navigation n = calc_navigation(buffer[i]);
         if (n.direction == FORWARD) {
@@ -53,7 +53,7 @@ void day02p1(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
     }
 }
 
-void day02p2(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
+static void p2(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
     int aim = 0;
     for (int i = 0; i < buffer_len; i++) {
         struct navigation n = calc_navigation(buffer[i]);
@@ -68,17 +68,16 @@ void day02p2(char *buffer[], int buffer_len, int *depth, int *horiz_position) {
     }
 }
 
-int day02(int part) {
+int day02(enum part p) {
     char *buffer[MAX_BUFFER];
     int buffer_len = read_string_file("day02.txt", buffer, MAX_BUFFER);
-
     int depth = 0;
     int horiz_position = 0;
 
-    if (part == 1) {
-        day02p1(buffer, buffer_len, &depth, &horiz_position);
-    } else if (part == 2) {
-        day02p2(buffer, buffer_len, &depth, &horiz_position);
+    if (p == ONE) {
+        p1(buffer, buffer_len, &depth, &horiz_position);
+    } else {
+        p2(buffer, buffer_len, &depth, &horiz_position);
     }
     return depth * horiz_position;
 }
