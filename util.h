@@ -25,7 +25,7 @@ int string_array_size(char *array[]);
 
 int read_int_file(char *filename, int *buffer);
 
-int read_string_file(char *filename, char *lines[], int buffer_size);
+int read_string_file(char *filename, char *buffer[], int buffer_size);
 
 void print_array(int *array);
 
@@ -44,5 +44,15 @@ int str_split(const char *string, const char *separator, char *splits[]);
 void int2bin(int a, char *buffer, int buf_size);
 
 char *substring(char *string, int start);
+
+int bit_on(int num, int pos);
+
+int bit_matches(int num, int pos, int bit);
+
+int elements(int *num_list, int buffer_len);
+
+int compact(int *num_list, int buffer_len);
+
+int one_element_remains(int *num_list, int buffer_len);
 
 #endif //AOC2021_UTIL_H

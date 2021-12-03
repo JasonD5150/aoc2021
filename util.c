@@ -149,7 +149,7 @@ int l_read_lines(char *lines[], FILE *fp, int max, char terminator) {
     return j;
 }
 
-int read_string_file(char *filename, char *lines[], int buffer_size) {
+int read_string_file(char *filename, char *buffer[], int buffer_size) {
     char file_name[strlen(FILE_PREFIX) + strlen(filename)];
     sprintf(file_name, "%s%s", FILE_PREFIX, filename);
     FILE *fp = fopen(file_name, "r");
@@ -158,7 +158,7 @@ int read_string_file(char *filename, char *lines[], int buffer_size) {
         exit(1);
     }
 
-    int line_count = l_read_lines(lines, fp, buffer_size, '\n');
+    int line_count = l_read_lines(buffer, fp, buffer_size, '\n');
     fclose(fp);
     return line_count;
 }
@@ -210,4 +210,56 @@ char *substring(char *string, int start) {
 
     strlcpy(result, (string + start), str_len - start);
     return result;
+}
+
+int bit_on(int num, int pos) {
+    return (num >> (pos - 1)) & 1;
+}
+
+int bit_matches(int num, int pos, int bit) {
+    int shift = pos - 1;
+    int n = (num >> shift) & 1;
+
+    if (n == bit) {
+        return 1;
+    }
+    return 0;
+}
+
+int elements(int *num_list, int buffer_len) {
+    int c = 0;
+    for (int i = 0; i < buffer_len; i++) {
+        if (num_list[i] != -1) {
+            c++;
+        }
+    }
+    return c;
+}
+
+int compact(int *num_list, int buffer_len) {
+    int c = elements(num_list, buffer_len);
+    int new_list[c];
+    c = 0;
+    for (int i = 0; i < buffer_len; i++) {
+        if (num_list[i] != -1) {
+            new_list[c++] = num_list[i];
+        }
+    }
+    for (int i = 0; i < buffer_len; i++) {
+        num_list[i] = -1;
+    }
+    for (int i = 0; i < c; i++) {
+        num_list[i] = new_list[i];
+    }
+    return c;
+}
+
+int one_element_remains(int *num_list, int buffer_len) {
+    int c = 0;
+    for (int i = 0; i < buffer_len; i++) {
+        if (num_list[i] != -1) {
+            c++;
+        }
+    }
+    return c;
 }

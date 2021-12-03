@@ -3,4 +3,4 @@ project(aoc2021 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(aoc2021 main.c util.c util.h day01.c day02.c days.h)
+add_executable(aoc2021 main.c util.c util.h day01.c day02.c days.h day03.c)
