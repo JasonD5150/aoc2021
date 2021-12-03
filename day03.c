@@ -15,8 +15,7 @@ struct bit_info {
     int most_common;
 };
 
-
-int int_list(int *num_list) {
+static int int_list(int *num_list) {
     char *buffer[MAX_BUFFER];
     int buffer_len = read_string_file("day03.txt", buffer, MAX_BUFFER);
     for (int i = 0; i < buffer_len; i++) {
@@ -25,7 +24,7 @@ int int_list(int *num_list) {
     return buffer_len;
 }
 
-struct bit_info bit_calc(int *num_list, int buffer_len, int pos) {
+static struct bit_info bit_calc(int *num_list, int buffer_len, int pos) {
     struct bit_info bi;
     bi.position = pos;
     bi.on_count = 0;
@@ -58,6 +57,24 @@ static int p1(int bit_width) {
     return gamma * epsilon;
 }
 
+static int match_and_reduce(int *matched_bit_criteria, int *buffer_len, struct bit_info bi) {
+    int m = 0;
+    if (*buffer_len == 1) {
+        m = matched_bit_criteria[0];
+    } else {
+        for (int i = 0; i < *buffer_len; i++) {
+            if (!bit_matches(matched_bit_criteria[i], bi.position, bi.most_common)) {
+                matched_bit_criteria[i] = -1;
+            }
+        }
+        *buffer_len = compact(matched_bit_criteria, *buffer_len);
+        if (*buffer_len == 1) {
+            m = matched_bit_criteria[0];
+        }
+    }
+    return m;
+}
+
 static int p2(int bit_width) {
     int num_list[MAX_BUFFER];
     int buffer_len = int_list(num_list);
@@ -74,19 +91,10 @@ static int p2(int bit_width) {
     /* o2 */
     for (int pos = bit_width; pos > 0; pos--) {
         struct bit_info bi = bit_calc(matched_bit_criteria, buffer_len, pos);
-        int mc = bi.most_common;
         if (bi.off_count == bi.on_count) {
-            mc = 1;
+            bi.most_common = 1;
         }
-        for (int i = 0; i < buffer_len; i++) {
-            if (!bit_matches(matched_bit_criteria[i], pos, mc)) {
-                matched_bit_criteria[i] = -1;
-            }
-        }
-        buffer_len = compact(matched_bit_criteria, buffer_len);
-        if (one_element_remains(matched_bit_criteria, buffer_len)) {
-            o2 = matched_bit_criteria[0];
-        }
+        o2 = match_and_reduce(matched_bit_criteria, &buffer_len, bi);
     }
     //co2
     for (int i = 0; i < original_buffer; i++) {
@@ -95,19 +103,11 @@ static int p2(int bit_width) {
     buffer_len = original_buffer;
     for (int pos = bit_width; pos > 0; pos--) {
         struct bit_info bi = bit_calc(matched_bit_criteria, buffer_len, pos);
-        int mc = !bi.most_common;
+        bi.most_common = !bi.most_common;
         if (bi.off_count == bi.on_count) {
-            mc = 0;
+            bi.most_common = 0;
         }
-        for (int i = 0; i < buffer_len; i++) {
-            if (!bit_matches(matched_bit_criteria[i], pos, mc)) {
-                matched_bit_criteria[i] = -1;
-            }
-        }
-        buffer_len = compact(matched_bit_criteria, buffer_len);
-        if (one_element_remains(matched_bit_criteria, buffer_len)) {
-            co2 = matched_bit_criteria[0];
-        }
+        co2 = match_and_reduce(matched_bit_criteria, &buffer_len, bi);
     }
 
     printf("\n%d %d", o2, co2);

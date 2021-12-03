@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     enum part p = daypart(argv[2]);
     int result = 0;
 
-    printf("\nexecuting %s part %d ", day, p);
+    printf("\nexecuting %s part %d ", day, p + 1);
 
     if (strcmp(day, "day01") == 0) {
         result = day01(p);
