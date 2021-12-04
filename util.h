@@ -45,6 +45,8 @@ void int2bin(int a, char *buffer, int buf_size);
 
 char *substring(char *string, int start);
 
+void strip_extra_spaces(char* str);
+
 int bit_on(int num, int pos);
 
 int bit_matches(int num, int pos, int bit);
@@ -54,5 +56,13 @@ int elements(int *num_list, int buffer_len);
 int compact(int *num_list, int buffer_len);
 
 int one_element_remains(int *num_list, int buffer_len);
+
+int to_int_array(char *string, int *array, char *separator);
+
+void copy_int_array(int *dest, int *src, int len);
+
+void empty_array(int *array, int size);
+
+void print_array_size(int *array, int size);
 
 #endif //AOC2021_UTIL_H

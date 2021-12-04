@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "util.h"
 
@@ -47,6 +48,14 @@ void l_print_string_array(char *array[], int size) {
     printf("]\n");
 }
 
+void strip_extra_spaces(char* str) {
+    int i, x;
+    for(i=x=0; str[i]; ++i)
+        if(!isspace(str[i]) || (i > 0 && !isspace(str[i-1])))
+            str[x++] = str[i];
+    str[x] = '\0';
+}
+
 int is_zero_array(const int *array, int size) {
     for (int i = 0; i < size; i++) {
         if (array[i]) return 0;
@@ -60,8 +69,18 @@ void zero_array(int *array, int size) {
     }
 }
 
+void empty_array(int *array, int size) {
+    for (int i = 0; i < size; i++) {
+        array[i] = END_OF_BUFFER;
+    }
+    array[size] = END_OF_BUFFER;
+}
+
 void print_array(int *array) {
     int size = array_size(array);
+    l_print_array(array, size);
+}
+void print_array_size(int *array, int size) {
     l_print_array(array, size);
 }
 
@@ -176,6 +195,7 @@ int str_count(const char *string, const char *token) {
 }
 
 int str_split(const char *string, const char *separator, char *splits[]) {
+    strip_extra_spaces(string);
     int str_len = (int)strlen(string);
     char *copy = malloc(str_len + 1);
     strlcpy(copy, string, str_len + 1);
@@ -190,7 +210,7 @@ int str_split(const char *string, const char *separator, char *splits[]) {
     } while (token != NULL);
     splits[i] = malloc(1);
     splits[i] = 0;
-    return i - 1;
+    return i;
 }
 
 void int2bin(int a, char *buffer, int buf_size) {
@@ -262,4 +282,21 @@ int one_element_remains(int *num_list, int buffer_len) {
         }
     }
     return c;
+}
+
+int to_int_array(char *string, int *array, char *separator) {
+    char *splits[MAX_BUFFER];
+    int split_count = str_split(string, separator, splits);
+    int c = 0;
+    for (int i = 0; i < split_count; i++) {
+        array[i] = (int) strtol(splits[i], (char **) NULL, 10);
+        c = i;
+    }
+    return c + 1;
+}
+
+void copy_int_array(int *dest, int *src, int len) {
+    for (int i = 0; i < len; i++) {
+        dest[i] = src[i];
+    }
 }
