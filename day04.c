@@ -166,24 +166,6 @@ static void check_bingo(struct Bingo *board, int call, int call_point) {
             return;
         }
     }
-    /* NO DIAGONAL BINGO
-    empty_array(bingo, BOARD_SIZE);
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        bingo[i] = board->playing_board[i][i];
-        compact(bingo, BOARD_SIZE);
-        if (array_size(bingo) == BOARD_SIZE) {
-            mark_bingo(board, bingo, call, DIAGONAL_DOWN);
-        }
-    }
-    empty_array(bingo, BOARD_SIZE);
-    for (int i = BOARD_SIZE - 1, j = 0; j < BOARD_SIZE; j++, i--) {
-        bingo[i] = board->playing_board[i][i];
-        compact(bingo, BOARD_SIZE);
-        if (array_size(bingo) == BOARD_SIZE) {
-            mark_bingo(board, bingo, call, DIAGONAL_UP);
-        }
-    }
-    */
 }
 
 static void play_board(struct Bingo *board, int call, int call_point) {
