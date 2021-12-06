@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "util.h"
 
@@ -299,4 +300,11 @@ void copy_int_array(int *dest, int *src, int len) {
     for (int i = 0; i < len; i++) {
         dest[i] = src[i];
     }
+}
+
+int num_digits(int i) {
+    if(i == 0) {
+        return 0;
+    }
+    return floor(log10(abs(i))) + 1;
 }

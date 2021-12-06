@@ -14,4 +14,6 @@ int day03(enum part p);
 
 int day04(enum part p);
 
+int day05(enum part p);
+
 #endif //AOC2021_DAYS_H

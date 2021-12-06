@@ -53,7 +53,7 @@ static void print_bingo_board(struct Bingo bingo) {
     print_board(bingo.playing_board, "playing board");
     printf("\nunmarked:");
     print_array_size(bingo.unmarked, bingo.unmarked_size);
-    printf("\nbingo hits:");
+    printf("\nbingo hit_map:");
     print_array_size(bingo.bingo, BOARD_SIZE);
     printf("\nunmarked sum: %d", bingo.unmarked_sum);
     printf("\nhas bingo %d", bingo.has_bingo);
@@ -187,7 +187,7 @@ static void play_bingo(struct Bingo *boards, int boards_size, int *called_number
     }
 }
 
-int p1() {
+static int p1() {
     int called_numbers[MAX_BUFFER], boards_size = 0, called_size = 0;
     struct Bingo *boards = load(called_numbers, &boards_size, &called_size);
     play_bingo(boards, boards_size, called_numbers, called_size);
@@ -209,7 +209,7 @@ int p1() {
     return result;
 }
 
-int p2() {
+static int p2() {
     int called_numbers[MAX_BUFFER], boards_size = 0, called_size = 0;
     struct Bingo *boards = load(called_numbers, &boards_size, &called_size);
     play_bingo(boards, boards_size, called_numbers, called_size);

@@ -65,4 +65,6 @@ void empty_array(int *array, int size);
 
 void print_array_size(int *array, int size);
 
+int num_digits(int i);
+
 #endif //AOC2021_UTIL_H
