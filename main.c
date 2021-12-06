@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
         result = day04(p);
     } else if (strcmp(day, "day05") == 0) {
         result = day05(p);
+    } else if (strcmp(day, "day06") == 0) {
+        result = day06(p);
     } else {
         printf("\ninvalid day: %s - expecting 'day01', 'day02', etc...", day);
     }

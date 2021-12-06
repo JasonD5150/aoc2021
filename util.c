@@ -285,6 +285,18 @@ int one_element_remains(int *num_list, int buffer_len) {
     return c;
 }
 
+int to_short_array(char *string, short *array, char *separator) {
+    char *splits[MAX_BUFFER];
+    int split_count = str_split(string, separator, splits);
+    int c = 0;
+    for (int i = 0; i < split_count; i++) {
+        array[i] = (short) strtol(splits[i], (char **) NULL, 10);
+        c = i;
+    }
+    return c + 1;
+}
+
+
 int to_int_array(char *string, int *array, char *separator) {
     char *splits[MAX_BUFFER];
     int split_count = str_split(string, separator, splits);

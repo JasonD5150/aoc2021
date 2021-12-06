@@ -59,6 +59,8 @@ int one_element_remains(int *num_list, int buffer_len);
 
 int to_int_array(char *string, int *array, char *separator);
 
+int to_short_array(char *string, short *array, char *separator);
+
 void copy_int_array(int *dest, int *src, int len);
 
 void empty_array(int *array, int size);
