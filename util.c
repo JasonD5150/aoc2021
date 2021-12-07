@@ -17,8 +17,7 @@ enum part daypart(char *arg) {
     int p = (int) strtol(arg, (char **) NULL, 10);
     if (p == 1) {
         return ONE;
-    }
-    else return TWO;
+    } else return TWO;
 }
 
 void l_print_array(const int *array, int size) {
@@ -49,10 +48,10 @@ void l_print_string_array(char *array[], int size) {
     printf("]\n");
 }
 
-void strip_extra_spaces(char* str) {
+void strip_extra_spaces(char *str) {
     int i, x;
-    for(i=x=0; str[i]; ++i)
-        if(!isspace(str[i]) || (i > 0 && !isspace(str[i-1])))
+    for (i = x = 0; str[i]; ++i)
+        if (!isspace(str[i]) || (i > 0 && !isspace(str[i - 1])))
             str[x++] = str[i];
     str[x] = '\0';
 }
@@ -81,6 +80,7 @@ void print_array(int *array) {
     int size = array_size(array);
     l_print_array(array, size);
 }
+
 void print_array_size(int *array, int size) {
     l_print_array(array, size);
 }
@@ -102,6 +102,11 @@ int int_compare(const void *a, const void *b) {
 void sort_int_array(int *array) {
     qsort(array, array_size(array), sizeof(int), int_compare);
 }
+
+void sort_int_array_size(int *array, int size) {
+    qsort(array, size, sizeof(int), int_compare);
+}
+
 
 int array_size(const int *array) {
     int i = 0;
@@ -197,7 +202,7 @@ int str_count(const char *string, const char *token) {
 
 int str_split(const char *string, const char *separator, char *splits[]) {
     strip_extra_spaces(string);
-    int str_len = (int)strlen(string);
+    int str_len = (int) strlen(string);
     char *copy = malloc(str_len + 1);
     strlcpy(copy, string, str_len + 1);
     char *token = strtok(copy, separator);
@@ -218,13 +223,13 @@ void int2bin(int a, char *buffer, int buf_size) {
     buffer[buf_size] = '\0';
     buffer += (buf_size - 1);
     for (int i = buf_size - 1; i >= 0; i--) {
-        *buffer-- = (char)((a & 1) + '0');
+        *buffer-- = (char) ((a & 1) + '0');
         a >>= 1;
     }
 }
 
 char *substring(char *string, int start) {
-    int str_len = (int)strlen(string);
+    int str_len = (int) strlen(string);
     char *result = malloc(str_len - start + 1);
 
     printf("%s", (string + start));
@@ -315,8 +320,36 @@ void copy_int_array(int *dest, int *src, int len) {
 }
 
 int num_digits(int i) {
-    if(i == 0) {
+    if (i == 0) {
         return 0;
     }
-    return floor(log10(abs(i))) + 1;
+    return (int)floor(log10(abs(i))) + 1;
 }
+
+int is_odd(int i) {
+    if (i % 2 == 0) return 0;
+    return 1;
+}
+
+int mid_element_mean(const int *sorted_array, int array_size) {
+
+    if (is_odd(array_size) == 1) {
+        double mid = ceil((double)array_size / 2);
+        return *(sorted_array + (int) mid);
+    }
+    int mid_l = (array_size / 2) - 1;
+    int mid_r = (array_size / 2);
+    int l = *(sorted_array + mid_l);
+    int r = *(sorted_array + mid_r);
+    double avg = round((double)(l + r) / 2);
+    return (int) avg;
+}
+
+double average_int_s(const int *array, int array_size) {
+    long sum = 0;
+    for (int i = 0; i < array_size; i++) {
+        sum = sum + *(array + i);
+    }
+    return (double) sum / array_size;
+}
+

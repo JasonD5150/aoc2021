@@ -19,6 +19,8 @@ int int_compare(const void *a, const void *b);
 
 void sort_int_array(int *array);
 
+void sort_int_array_size(int *array, int size);
+
 int array_size(const int *array);
 
 int string_array_size(char *array[]);
@@ -68,5 +70,11 @@ void empty_array(int *array, int size);
 void print_array_size(int *array, int size);
 
 int num_digits(int i);
+
+int mid_element_mean(const int *sorted_array, int array_size);
+
+int is_odd(int i);
+
+double average_int_s(const int *array, int array_size);
 
 #endif //AOC2021_UTIL_H
