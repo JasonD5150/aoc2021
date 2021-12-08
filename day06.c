@@ -21,16 +21,12 @@ static long sum_fish(int *buffer, int buffer_len, int days) {
     long *fish = malloc((long) sizeof(long) * tot_days);
 
     for (int i = 0; i < buffer_len; i++) {
-        /* initialize each fish pointer as the sum days until it creates a new fish */
-        printf("\nfish[%d] = fish[%d] + 1", *(buffer + i), *(buffer + i));
         *(fish + *(buffer + i)) = *(fish + *(buffer + i)) + 1;
     }
 
     for (int i = 0; i < days; i++) {
         int spawn_mod_9_cursor = (i + 7) % 9;
         int day_mod_9_cursor = i % 9;
-        printf("\nday %d -> fish[%d](%ld) += fish[%d](%ld)",
-               i, spawn_mod_9_cursor, *(fish + spawn_mod_9_cursor), day_mod_9_cursor, *(fish + day_mod_9_cursor));
         *(fish + spawn_mod_9_cursor) = *(fish + spawn_mod_9_cursor) + *(fish + day_mod_9_cursor);
     }
     long sum = 0;
@@ -38,7 +34,6 @@ static long sum_fish(int *buffer, int buffer_len, int days) {
         sum = sum + *(fish + i);
     }
     return sum;
-
 }
 
 static int p1() {

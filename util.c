@@ -13,6 +13,8 @@ const char *FILE_PREFIX = "/Users/jasondavidson/git/aoc2021/input/";
 const int END_OF_BUFFER = -1;
 const int MAX_BUFFER = INT16_MAX;
 
+#define MIN3(a, b, c) ((a) < (b) ? ((a) < (c) ? (a) : (c)) : ((b) < (c) ? (b) : (c)))
+
 enum part daypart(char *arg) {
     int p = (int) strtol(arg, (char **) NULL, 10);
     if (p == 1) {
@@ -99,12 +101,20 @@ int int_compare(const void *a, const void *b) {
     return (*(int *) a - *(int *) b);
 }
 
+int char_compare(const void *a, const void *b) {
+    return (*(char *) a - *(char *) b);
+}
+
 void sort_int_array(int *array) {
     qsort(array, array_size(array), sizeof(int), int_compare);
 }
 
 void sort_int_array_size(int *array, int size) {
     qsort(array, size, sizeof(int), int_compare);
+}
+
+void order_word(char *word) {
+    qsort(word, strlen(word), sizeof(char), char_compare);
 }
 
 
@@ -353,3 +363,20 @@ double average_int_s(const int *array, int array_size) {
     return (double) sum / array_size;
 }
 
+int levenshtein(char *s1, char *s2) {
+    unsigned int s1len, s2len, x, y, lastdiag, olddiag;
+    s1len = strlen(s1);
+    s2len = strlen(s2);
+    unsigned int column[s1len + 1];
+    for (y = 1; y <= s1len; y++)
+        column[y] = y;
+    for (x = 1; x <= s2len; x++) {
+        column[0] = x;
+        for (y = 1, lastdiag = x - 1; y <= s1len; y++) {
+            olddiag = column[y];
+            column[y] = MIN3(column[y] + 1, column[y - 1] + 1, lastdiag + (s1[y-1] == s2[x - 1] ? 0 : 1));
+            lastdiag = olddiag;
+        }
+    }
+    return column[s1len];
+}

@@ -77,4 +77,8 @@ int is_odd(int i);
 
 double average_int_s(const int *array, int array_size);
 
+int levenshtein(char *s1, char *s2);
+
+void order_word(char *word);
+
 #endif //AOC2021_UTIL_H
