@@ -5,7 +5,9 @@
 #ifndef AOC2021_UTIL_H
 #define AOC2021_UTIL_H
 
-enum part { ONE, TWO };
+enum part {
+    ONE, TWO
+};
 
 extern const char *FILE_PREFIX;
 
@@ -47,7 +49,7 @@ void int2bin(int a, char *buffer, int buf_size);
 
 char *substring(char *string, int start);
 
-void strip_extra_spaces(char* str);
+void strip_extra_spaces(char *str);
 
 int bit_on(int num, int pos);
 
@@ -79,6 +81,8 @@ double average_int_s(const int *array, int array_size);
 
 int levenshtein(char *s1, char *s2);
 
-void order_word(char *word);
+char *order_word(char *word);
+
+char *order_word_s(char *word, int size);
 
 #endif //AOC2021_UTIL_H

@@ -2,97 +2,191 @@
 // Created by Jason Davidson on 12/8/21.
 //
 
-
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
+#include <math.h>
+#include <assert.h>
 #include "days.h"
 
 #define INPUT_FILENAME "day08.txt"
 
-#define D0 "abcefg"
-#define D1 "cf"
-#define D2 "acdeg"
-#define D3 "acdfg"
-#define D4 "bcdf"
-#define D5 "abdfg"
-#define D6 "abdefg"
-#define D7 "acf"
-#define D8 "abcdefg"
-#define D9 "abcdfg"
-
 struct Segment {
-    char *s;
-    int segments;
-    int unique;
+    char s[8];
     int length;
 };
 
-const struct Segment s0 = {.s = D0, .segments = 6, .unique = 0, .length = strlen(D0)};
-const struct Segment s1 = {.s = D1, .segments = 2, .unique = 1, .length = strlen(D1)};
-const struct Segment s2 = {.s = D2, .segments = 5, .unique = 0, .length = strlen(D2)};
-const struct Segment s3 = {.s = D3, .segments = 5, .unique = 0, .length = strlen(D3)};
-const struct Segment s4 = {.s = D4, .segments = 4, .unique = 1, .length = strlen(D4)};
-const struct Segment s5 = {.s = D5, .segments = 5, .unique = 0, .length = strlen(D5)};
-const struct Segment s6 = {.s = D6, .segments = 6, .unique = 0, .length = strlen(D6)};
-const struct Segment s7 = {.s = D7, .segments = 3, .unique = 1, .length = strlen(D7)};
-const struct Segment s8 = {.s = D8, .segments = 7, .unique = 1, .length = strlen(D8)};
-const struct Segment s9 = {.s = D9, .segments = 6, .unique = 0, .length = strlen(D9)};
+static struct Segment segment_digit_lookup[10];
 
 static int load_buffer(char **buffer) {
     int buffer_len = read_string_file(INPUT_FILENAME, buffer, MAX_BUFFER);
     return buffer_len;
 }
 
-static int signal_patterns(char *buffer, char **sig_patterns) {
+static int split_patterns(char *buffer, char **patterns, enum part p) {
     char *pipe_split[2];
     str_split(buffer, "|", pipe_split);
 
-    int sig_len = str_split(pipe_split[0], " ", sig_patterns);
-    for (int i = 0; i < sig_len; i++) {
-        order_word(*(sig_patterns + i));
+    int split = 0;
+    if (p == TWO) {
+        split = 1;
     }
-
-    return sig_len;
+    int p_len = str_split(*(pipe_split + split), " ", patterns);
+    for (int i = 0; i < p_len; i++) {
+        order_word(*(patterns + i));
+    }
+    return p_len;
 }
 
-static int output_patterns(char *buffer, char **output_patterns) {
-    char *pipe_split[2];
-    str_split(buffer, "|", pipe_split);
-
-    int out_len = str_split(pipe_split[1], " ", output_patterns);
-
-    for (int i = 0; i < out_len; i++) {
-        order_word(*(output_patterns + i));
+static int count_matches(struct Segment s, const char *pattern, int pattern_len) {
+    int c = 0;
+    for (int i = 0; i < pattern_len; i++) {
+        for (int j = 0; j < s.length; j++) {
+            if (*(pattern + i) == *(s.s + j)) {
+                c++;
+            }
+        }
     }
-    return out_len;
+    return c;
 }
 
-static int p1() {
+static int contains_digit_overlap(const char *pattern, int pattern_len, int digit) {
+    struct Segment s = *(segment_digit_lookup + digit);
+    if (count_matches(s, pattern, pattern_len) == s.length) {
+        return 1;
+    }
+    return 0;
+}
 
+static int intersects_4(const char *pattern, int pattern_len) {
+    struct Segment s = segment_digit_lookup[4];
+    if (count_matches(s, pattern, pattern_len) == 3) {
+        return 1;
+    }
+    return 0;
+}
+
+static void build_signal_to_lookup(char **patterns, int pattern_len) {
+
+    /* build known lookup */
+    for (int i = 0; i < pattern_len; i++) {
+        int length = (int) strlen(*(patterns + i));
+        char *p = *(patterns + i);
+        struct Segment s;
+        s.length = length;
+        strlcpy(s.s, p, length + 1);
+        switch (length) {
+            case 2:
+                *(segment_digit_lookup + 1) = s;
+                break;
+            case 3:
+                *(segment_digit_lookup + 7) = s;
+                break;
+            case 4:
+                *(segment_digit_lookup + 4) = s;
+                break;
+            case 7:
+                *(segment_digit_lookup + 8) = s;
+                break;
+            default:
+                break;
+        }
+    }
+    for (int i = 0; i < pattern_len; i++) {
+        char *p = *(patterns + i);
+        int length = (int) strlen(p);
+        struct Segment s;
+        switch (length) {
+            case 5:
+                // Can be 2,3,5
+                if (contains_digit_overlap(p, length, 7)) {
+                    s.length = length;
+                    strlcpy(s.s, p, length + 1);
+                    *(segment_digit_lookup + 3) = s;
+                } else {
+                    if (intersects_4(p, length)) {
+                        s.length = length;
+                        strlcpy(s.s, p, length + 1);
+                        *(segment_digit_lookup + 5) = s;
+                    } else {
+                        s.length = length;
+                        strlcpy(s.s, p, length + 1);
+                        *(segment_digit_lookup + 2) = s;
+                    }
+                }
+                break;
+            case 6:
+                // Can be 0,6,9
+                if (contains_digit_overlap(p, length, 4)) {
+                    s.length = length;
+                    strlcpy(s.s, p, length + 1);
+                    *(segment_digit_lookup + 9) = s;
+                } else {
+                    if (contains_digit_overlap(p, length, 7)) {
+                        s.length = length;
+                        strlcpy(s.s, p, length + 1);
+                        *segment_digit_lookup = s;
+                    } else {
+                        s.length = length;
+                        strlcpy(s.s, p, length + 1);
+                        *(segment_digit_lookup + 6) = s;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+static int decode_output(char *output) {
+    for (int i = 0; i < 10; i++) {
+        if (strcmp(segment_digit_lookup[i].s, output) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static int sub_display(enum part p) {
     char *buffer[MAX_BUFFER];
     int buffer_len = load_buffer(buffer);
 
-    int unique_count = 0;
+    int result = 0;
     for (int i = 0; i < buffer_len; i++) {
         char *output_p[4];
         char *signal_p[10];
 
-        int signal_p_len = signal_patterns(buffer[i], signal_p);
-        int output_p_len = output_patterns(buffer[i], output_p);
+        int signal_p_len = split_patterns(*(buffer + i), signal_p, ONE);
+        int output_p_len = split_patterns(*(buffer + i), output_p, TWO);
 
-        for (int j = 0; j < output_p_len; j++) {
-            int l = strlen(output_p[j]);
-            if (l == s1.length || l == s4.length || l == s7.length || l == s8.length) {
-                unique_count++;
+        build_signal_to_lookup(signal_p, signal_p_len);
+
+        // now decode the output
+        int o_val = 0;
+        for (int j = 0, k = 3; j < output_p_len; j++, k--) {
+            int decoded_digit = decode_output(*(output_p + j));
+            assert(decoded_digit >= 0);
+
+            if (p == ONE) {
+                if (decoded_digit == 1 || decoded_digit == 4 || decoded_digit == 7 || decoded_digit == 8) {
+                    result++;
+                }
+            } else {
+                decoded_digit = decoded_digit * (int) pow(10, k);
+                o_val = o_val + decoded_digit;
             }
         }
+        result = result + o_val;
     }
-    return unique_count;
+    return result;
+
+}
+
+static int p1() {
+    return sub_display(ONE);
 }
 
 static int p2() {
-    return 1;
+    return sub_display(TWO);
 }
 
 int day08(enum part p) {

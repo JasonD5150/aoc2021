@@ -113,8 +113,14 @@ void sort_int_array_size(int *array, int size) {
     qsort(array, size, sizeof(int), int_compare);
 }
 
-void order_word(char *word) {
+char *order_word(char *word) {
     qsort(word, strlen(word), sizeof(char), char_compare);
+    return word;
+}
+
+char *order_word_s(char *word, int size) {
+    qsort(word, size, sizeof(char), char_compare);
+    return word;
 }
 
 
