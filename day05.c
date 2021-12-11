@@ -57,7 +57,7 @@ static struct Point parse_pair(char *pair) {
                       (int) strtol(xy_split[1], (char **) NULL, 10));
 }
 
-static void mark_hit(struct Space *space, struct Point p, struct Line l) {
+static void mark_hit(struct Space *space, struct Point p) {
     int h = point_hash(p);
     space->hits[h] = space->hits[h] + 1;
 }
@@ -65,11 +65,11 @@ static void mark_hit(struct Space *space, struct Point p, struct Line l) {
 static void mark_hits(struct Space *space, struct Line line, int include_diagonal) {
     if (line.type == HORIZONTAL) {
         for (int x = line.min_p.x; x <= line.max_p.x; x++) {
-            mark_hit(space, make_point(x, line.p1.y), line);
+            mark_hit(space, make_point(x, line.p1.y));
         }
     } else if (line.type == VERTICAL) {
         for (int y = line.min_p.y; y <= line.max_p.y; y++) {
-            mark_hit(space, make_point(line.p1.x, y), line);
+            mark_hit(space, make_point(line.p1.x, y));
         }
     }
 
@@ -79,7 +79,7 @@ static void mark_hits(struct Space *space, struct Line line, int include_diagona
             m = -1;
         }
         for (int x = line.min_p.x, y = line.min_p.y; x <= line.max_p.x; x++, y += m) {
-            mark_hit(space, make_point(x, y), line);
+            mark_hit(space, make_point(x, y));
         }
     }
 }

@@ -87,9 +87,9 @@ void print_array_size(int *array, int size) {
     l_print_array(array, size);
 }
 
-void print_string_array(char *array[]) {
-    int size = string_array_size(array);
-    l_print_string_array(array, size);
+void print_lon_array(long *array) {
+    int size = array_size(array);
+    l_print_array(array, size);
 }
 
 int max(int a, int b) {
@@ -97,8 +97,20 @@ int max(int a, int b) {
     return b;
 }
 
-int int_compare(const void *a, const void *b) {
+static int int_compare(const void *a, const void *b) {
     return (*(int *) a - *(int *) b);
+}
+
+static int long_compare(const void *a, const void *b) {
+    if( *(long long int*)a - *(long long int*)b < 0 )
+        return -1;
+    if( *(long long int*)a - *(long long int*)b > 0 )
+        return 1;
+    return 0;
+}
+
+static int desc_compare(const void *a, const void *b) {
+    return (*(int *) b - *(int *) a);
 }
 
 int char_compare(const void *a, const void *b) {
@@ -111,6 +123,14 @@ void sort_int_array(int *array) {
 
 void sort_int_array_size(int *array, int size) {
     qsort(array, size, sizeof(int), int_compare);
+}
+
+void sort_long_array_size(long *array, int size) {
+    qsort(array, size, sizeof(long), long_compare);
+}
+
+void sort_int_array_desc_s(int *array, int size) {
+    qsort(array, size, sizeof(int), desc_compare);
 }
 
 char *order_word(char *word) {
@@ -216,7 +236,7 @@ int str_count(const char *string, const char *token) {
     return j;
 }
 
-int str_split(const char *string, const char *separator, char *splits[]) {
+int str_split(char *string, const char *separator, char *splits[]) {
     strip_extra_spaces(string);
     int str_len = (int) strlen(string);
     char *copy = malloc(str_len + 1);
@@ -339,7 +359,7 @@ int num_digits(int i) {
     if (i == 0) {
         return 0;
     }
-    return (int)floor(log10(abs(i))) + 1;
+    return (int) floor(log10(abs(i))) + 1;
 }
 
 int is_odd(int i) {
@@ -350,14 +370,14 @@ int is_odd(int i) {
 int mid_element_mean(const int *sorted_array, int array_size) {
 
     if (is_odd(array_size) == 1) {
-        double mid = ceil((double)array_size / 2);
+        double mid = ceil((double) array_size / 2);
         return *(sorted_array + (int) mid);
     }
     int mid_l = (array_size / 2) - 1;
     int mid_r = (array_size / 2);
     int l = *(sorted_array + mid_l);
     int r = *(sorted_array + mid_r);
-    double avg = round((double)(l + r) / 2);
+    double avg = round((double) (l + r) / 2);
     return (int) avg;
 }
 
@@ -380,7 +400,7 @@ int levenshtein(char *s1, char *s2) {
         column[0] = x;
         for (y = 1, lastdiag = x - 1; y <= s1len; y++) {
             olddiag = column[y];
-            column[y] = MIN3(column[y] + 1, column[y - 1] + 1, lastdiag + (s1[y-1] == s2[x - 1] ? 0 : 1));
+            column[y] = MIN3(column[y] + 1, column[y - 1] + 1, lastdiag + (s1[y - 1] == s2[x - 1] ? 0 : 1));
             lastdiag = olddiag;
         }
     }

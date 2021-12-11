@@ -59,5 +59,5 @@ int day07(enum part p) {
     }
     long l = p2();
     printf("\n%ld", l);
-    return l;
+    return (int)l;
 }

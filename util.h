@@ -17,8 +17,6 @@ extern const int MAX_BUFFER;
 
 enum part daypart(char *arg);
 
-int int_compare(const void *a, const void *b);
-
 void sort_int_array(int *array);
 
 void sort_int_array_size(int *array, int size);
@@ -43,7 +41,7 @@ int max(int a, int b);
 
 int str_count(const char *string, const char *token);
 
-int str_split(const char *string, const char *separator, char *splits[]);
+int str_split(char *string, const char *separator, char *splits[]);
 
 void int2bin(int a, char *buffer, int buf_size);
 
@@ -84,5 +82,9 @@ int levenshtein(char *s1, char *s2);
 char *order_word(char *word);
 
 char *order_word_s(char *word, int size);
+
+void sort_int_array_desc_s(int *array, int size);
+
+void sort_long_array_size(long *array, int size);
 
 #endif //AOC2021_UTIL_H

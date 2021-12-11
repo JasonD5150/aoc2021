@@ -62,16 +62,6 @@ static void print_bingo_board(struct Bingo bingo) {
     printf("\nlast number called:%d winning row sum:%d", bingo.last_number_called,
            bingo.winning_row_sum);
 }
-static void print_all_bingo_boards(struct Bingo *boards, int board_count) {
-    if (boards == NULL) {
-        printf("\nno boards");
-    } else {
-        for (int i = 0; i < board_count; i++) {
-            printf("\nBoard # %d", i);
-            print_bingo_board(boards[i]);
-        }
-    }
-}
 
 static int load_boards(char *buffer[MAX_BUFFER], int buffer_len, struct Bingo *boards) {
     int size = 0;
