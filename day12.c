@@ -3,7 +3,6 @@
 //
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -14,36 +13,36 @@
 #define MAX_CAVES 100
 
 typedef struct Cave {
-    char *name;
-    bool small;
     int connected_cave_count;
     struct Cave **connected_caves;
+    int small;
+    char *name;
 } Cave;
 
 static Cave *start = NULL;
 static Cave *end = NULL;
 static Cave caves[MAX_CAVES];
 
-static Cave *cave_with_name(Cave *c, int cave_count, char *name) {
+static Cave *get_cave(Cave *c, int cave_count, char *name) {
     for (int i = 0; i < cave_count; ++i) {
-        if (strcmp(c[i].name, name) == 0) {
+        if (strcmp((*(c + i)).name, name) == 0) {
             return &c[i];
         }
     }
     return NULL;
 }
 
-static bool cave_visited(Cave *c, Cave **visited, int visit_count) {
+static int cave_visited(Cave *c, Cave **visited, int visit_count) {
     for (int i = 0; i < visit_count; ++i) {
-        if (visited[i] == c) {
-            return true;
+        if (*(visited + i) == c) {
+            return 1;
         }
     }
-    return false;
+    return 0;
 }
 
 static Cave *store_cave(char *name, int *cave_count) {
-    Cave *c = cave_with_name(caves, *cave_count, name);
+    Cave *c = get_cave(caves, *cave_count, name);
     if (c == NULL) {
         c = &caves[*cave_count];
         c->name = malloc((sizeof(char *) * strlen(name) + 1));
@@ -62,7 +61,7 @@ static Cave *store_cave(char *name, int *cave_count) {
     return c;
 }
 
-static int find_paths(Cave *start_c, Cave *end_c, Cave **visited, int visit_count, bool visit_once) {
+static int count_paths(Cave *start_c, Cave *end_c, Cave **visited, int visit_count, int visit_once) {
     if (start_c == end_c) {
         return 1;
     }
@@ -72,22 +71,23 @@ static int find_paths(Cave *start_c, Cave *end_c, Cave **visited, int visit_coun
     int new_visit_count = 0;
     if (visited != NULL && visit_count > 0) {
         for (int i = 0; i < visit_count; ++i) {
-            new_visited[new_visit_count++] = visited[i];
+            *(new_visited + new_visit_count++) = *(visited + i);
         }
     }
 
-    if (start_c->small) {
-        new_visited[new_visit_count++] = start_c;
+    if (start_c->small == 1) {
+        *(new_visited + new_visit_count++) = start_c;
     }
 
     for (int i = 0; i < start_c->connected_cave_count; ++i) {
-        if (strcmp(start_c->connected_caves[i]->name, "start") == 0) {
-            continue;
-        }
-        if (!cave_visited(start_c->connected_caves[i], new_visited, new_visit_count)) {
-            result = result + find_paths(start_c->connected_caves[i], end_c, new_visited, new_visit_count, visit_once);
-        } else if (!visit_once) {
-            result = result + find_paths(start_c->connected_caves[i], end_c, new_visited, new_visit_count, 1);
+        if (strcmp((*(start_c->connected_caves + i))->name, "start") != 0) {
+            if (!cave_visited(*(start_c->connected_caves + i), new_visited, new_visit_count)) {
+                result += count_paths(
+                        *(start_c->connected_caves + i), end_c, new_visited, new_visit_count, visit_once);
+            } else if (visit_once == 0) {
+                result += count_paths(
+                        *(start_c->connected_caves + i), end_c, new_visited, new_visit_count, 1);
+            }
         }
     }
     return result;
@@ -100,10 +100,10 @@ static int load() {
     int cave_count = 0;
     for (int i = 0; i < buffer_len; i++) {
         char *splits[2];
-        str_split(buffer[i], "-", splits);
+        str_split(*(buffer + i), "-", splits);
 
-        Cave *c1 = store_cave(splits[0], &cave_count);
-        Cave *c2 = store_cave(splits[1], &cave_count);
+        Cave *c1 = store_cave(*splits, &cave_count);
+        Cave *c2 = store_cave(*(splits + 1), &cave_count);
         c1->connected_caves[c1->connected_cave_count++] = c2;
         c2->connected_caves[c2->connected_cave_count++] = c1;
     }
@@ -112,12 +112,12 @@ static int load() {
 
 static int p1() {
     load();
-    return find_paths(start, end, NULL, 0, true);
+    return count_paths(start, end, NULL, 0, 1);
 }
 
 static int p2() {
     load();
-    return find_paths(start, end, NULL, 0, false);
+    return count_paths(start, end, NULL, 0, 0);
 }
 
 int day12(enum part p) {

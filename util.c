@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include "util.h"
 
@@ -221,6 +222,7 @@ int read_string_file(char *filename, char *buffer[], int buffer_size) {
 
     int line_count = l_read_lines(buffer, fp, buffer_size, '\n');
     fclose(fp);
+
     return line_count;
 }
 

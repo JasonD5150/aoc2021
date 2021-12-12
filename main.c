@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <sys/time.h>
 
 #include "days.h"
 #include "util.h"
@@ -15,6 +17,10 @@ int main(int argc, char *argv[]) {
     int result = 0;
 
     printf("\nexecuting %s part %d ", day, p + 1);
+
+    struct timeval start;
+    struct timeval stop;
+    gettimeofday(&start, NULL);
 
     if (strcmp(day, "day01") == 0) {
         result = day01(p);
@@ -43,5 +49,11 @@ int main(int argc, char *argv[]) {
     } else {
         printf("\ninvalid day: %s - expecting 'day01', 'day02', etc...", day);
     }
+    gettimeofday(&stop, NULL);
+    printf("\n\n%f ms\n",
+           (float)(stop.tv_sec - start.tv_sec) * 1000.0f + (float)(stop.tv_usec - start.tv_usec) / 1000.0f);
+
     printf("\nresult %d", result);
+
+
 }
