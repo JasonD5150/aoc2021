@@ -93,19 +93,14 @@ void print_lon_array(long *array) {
     l_print_array(array, size);
 }
 
-int max(int a, int b) {
-    if (a > b) return a;
-    return b;
-}
-
 static int int_compare(const void *a, const void *b) {
     return (*(int *) a - *(int *) b);
 }
 
 static int long_compare(const void *a, const void *b) {
-    if( *(long long int*)a - *(long long int*)b < 0 )
+    if (*(long long int *) a - *(long long int *) b < 0)
         return -1;
-    if( *(long long int*)a - *(long long int*)b > 0 )
+    if (*(long long int *) a - *(long long int *) b > 0)
         return 1;
     return 0;
 }
@@ -407,4 +402,12 @@ int levenshtein(char *s1, char *s2) {
         }
     }
     return column[s1len];
+}
+
+int min(int x, int y) {
+    return y ^ ((x ^ y) & -(x < y));
+}
+
+int max(int x, int y) {
+    return x ^ ((x ^ y) & -(x < y));
 }

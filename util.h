@@ -37,8 +37,6 @@ void zero_array(int *array, int size);
 
 int is_zero_array(const int *array, int size);
 
-int max(int a, int b);
-
 int str_count(const char *string, const char *token);
 
 int str_split(char *string, const char *separator, char *splits[]);
@@ -86,5 +84,9 @@ char *order_word_s(char *word, int size);
 void sort_int_array_desc_s(int *array, int size);
 
 void sort_long_array_size(long *array, int size);
+
+int min(int x, int y);
+
+int max(int x, int y);
 
 #endif //AOC2021_UTIL_H
