@@ -48,6 +48,8 @@ int main(int argc, char *argv[]) {
         result = day12(p);
     } else if (strcmp(day, "day13") == 0) {
         result = day13(p);
+    } else if (strcmp(day, "day14") == 0) {
+        result = day14(p);
     } else {
         printf("\ninvalid day: %s - expecting 'day01', 'day02', etc...", day);
     }
